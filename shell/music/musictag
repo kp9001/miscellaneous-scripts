@@ -1,0 +1,14 @@
+#!/bin/bash
+# run from music directory
+
+find * -name '*.mp3' | while read f
+do
+    title=$(eyeD3 "${f}" | grep ^title: | sed 's/title:\ //g' | sed 's/,//g')
+    artist=$(eyeD3 "${f}" | grep ^artist: | sed 's/artist:\ //g' | sed 's/,//g')
+    album=$(eyeD3 "${f}" | grep ^album: | sed 's/album:\ //g' | sed 's/,//g')
+    genre=$(eyeD3 "${f}" | grep genre: | sed 's/^.*genre:\ //g' | sed 's/\ (.*$//g')
+    date=$(eyeD3 "${f}" | grep ^recording\ date: | sed 's/recording\ date:\ //g')
+    track=$(eyeD3 "${f}" | grep ^track | sed 's/track:\ //g' | sed 's/\t.*//g')
+    id3v2 -t "${title}" -a "${artist}" -A "${album}" -g "${genre}" -y "${date}" -T "${track}" "${f}"
+done
+

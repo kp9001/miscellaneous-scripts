@@ -1,0 +1,5 @@
+#!/bin/bash
+
+[ $# == 1 ] && NUMBER="$1" || NUMBER=1
+
+while :; do date +%H:%M:%S:%2N; sleep "$NUMBER" ; done

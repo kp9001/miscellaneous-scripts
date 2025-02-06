@@ -1,0 +1,9 @@
+#!/bin/bash
+
+drive=${1?Format: delete [drive] [file]}
+newdata="/dev/random"
+
+sector=$(cat /sys/block/"$drive"/queue/hw_sector_size)
+blocks=$(stat "$2" | grep Blocks | sed 's/.*Blocks:\ //g' | sed 's/\ .*//g')
+
+dd if="$newdata" of="$2" bs="$sector" count="$blocks" 2>/dev/null && rm "$2"

@@ -1,0 +1,19 @@
+#!/bin/bash
+# run from music directory
+
+counter=1
+find * -name '*.mp3' | while read f
+do
+    ffprobe=$(ffprobe "${f}" 2> >(grep bitrate: -A 1))
+    bitrate=$(echo $ffprobe | sed 's/\ Stream/\nStream/g' | grep bitrate: | sed 's/^.*bitrate:\ //g' | sed 's/[^0-9]*//g')
+    frequency=$(echo $ffprobe | sed 's/\ Stream/\nStream/g' | grep Stream | sed 's/^.*mp3,\ //g' | sed 's/\ Hz.*$//g')
+    duration=$(echo $ffprobe | sed 's/^Duration:\ //g' | sed 's/\..*$//g')
+    title=$(eyeD3 "${f}" | grep ^title: | sed 's/title:\ //g' | sed 's/,//g')
+    artist=$(eyeD3 "${f}" | grep ^artist: | sed 's/artist:\ //g' | sed 's/,//g')
+    album=$(eyeD3 "${f}" | grep ^album: | sed 's/album:\ //g' | sed 's/,//g')
+    genre=$(eyeD3 "${f}" | grep genre: | sed 's/^.*genre:\ //g' | sed 's/\ (.*$//g')
+    date=$(eyeD3 "${f}" | grep ^recording\ date: | sed 's/recording\ date:\ //g')
+    echo "$counter,$artist,$album,$title,$genre,$date,$duration,$bitrate,$frequency" >> music.csv
+    counter=$((counter+1))
+done
+

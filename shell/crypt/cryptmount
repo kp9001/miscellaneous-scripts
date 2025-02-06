@@ -1,0 +1,5 @@
+#!/bin/sh
+case $1 in
+	"") read -sp 'Mount password: ' pass && synoshare --enc_mount .index "$pass" ;;
+	"-d") synoshare --enc_unmount .index ;;
+esac

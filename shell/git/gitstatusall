@@ -1,0 +1,16 @@
+#!/bin/bash
+
+GITDIR=~/dev
+GITREPOS=$( ls $GITDIR )
+
+CYAN='\033[0;36m' 
+RED='\033[0;31m'
+NC='\033[0m' 
+
+for i in $GITREPOS
+do
+    cd "$GITDIR"/"$i"
+    REPO=$( pwd | rev | cut -d/ -f1 | rev )
+    STATUS=$( git status | grep -e "Untracked files" -e "Changes not staged for commit" 1>/dev/null && echo "Uncommitted Changes" || echo "Up to Date" )
+    [[ "$STATUS" == "Uncommitted Changes" ]] && echo -e ${CYAN}"$REPO": ${RED}"$STATUS" || echo -e ${CYAN}"$REPO": ${NC}"$STATUS"
+done

@@ -1,0 +1,25 @@
+#!/bin/bash
+
+# must modify AUDIO and MIC variables for different hardware!
+# can use " -f alsa -i default " or " -f alsa -i pulse " for single audio, probably mic
+
+OUTPUT=${2?Give output file name}
+
+RES="1920x1080"
+AUDIO=$"alsa_output.pci-0000_00_14.2.analog-stereo.monitor"
+MIC=$"alsa_input.usb-Blue_Microphones_Yeti_Stereo_Microphone_REV8-00.analog-stereo"
+
+case $1 in
+	"--audio") ffmpeg -f pulse -i "$AUDIO" "$OUTPUT" ;;
+	"--mic") ffmpeg -f pulse -i "$MIC" "$OUTPUT" ;;
+	"--audio-mic") ffmpeg -f pulse -i "$AUDIO" -f pulse -i "$MIC" -filter_complex amix=inputs=2 "$OUTPUT" ;;
+	"--screen") ffmpeg -f x11grab -s "$RES" -i :0.0 "$OUTPUT"  ;;
+	"--screen-mic") ffmpeg -f x11grab -s "$RES" -i :0.0 -f pulse -i "$MIC" "$OUTPUT" ;;
+	"--screen-audio") ffmpeg -f x11grab -s "$RES" -i :0.0 -f pulse -i "$AUDIO" "$OUTPUT" ;;
+	"--screen-audio-mic") ffmpeg -f x11grab -s "$RES" -i :0.0 -f pulse -i "$AUDIO" -f pulse -i "$MIC" -filter_complex amix=inputs=2 "$OUTPUT" ;;
+	"--webcam") ffmpeg -i /dev/video0 "$OUTPUT" ;;
+	"--webcam-mic") ffmpeg -i /dev/video0 -f pulse -i "$MIC" "$OUTPUT" ;;
+	"--webcam-audio") ffmpeg -i /dev/video0 -f pulse -i "$AUDIO" "$OUTPUT" ;;
+	"--webcam-audio-mic") ffmpeg -i /dev/video0 -f pulse -i "$AUDIO" -f pulse -i "$MIC" -filter_complex amix=inputs=2 "$OUTPUT" ;;
+esac
+

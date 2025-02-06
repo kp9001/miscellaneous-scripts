@@ -1,0 +1,11 @@
+#!/bin/bash
+
+find * -name '*m4a' | while read f
+do
+    bitrate=$(ffprobe "${f}" 2> >(grep bitrate:) | sed 's/^.*bitrate:\ //g' | sed 's/[^0-9]*//g')
+    bitrate="${bitrate}k"
+    name=$(echo "${f}" | sed 's/.m4a$/.mp3/g')
+    ffmpeg -y -i "${f}" -acodec libmp3lame -ab "${bitrate}" "${name}"
+    rm "$f"
+done
+

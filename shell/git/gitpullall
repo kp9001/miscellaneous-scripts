@@ -1,0 +1,9 @@
+#!/bin/bash
+
+GITDIR=~/dev
+REPOS=$( ls $GITDIR )
+
+for i in $REPOS; do
+  cd "$GITDIR"/"$i"
+  git pull
+done

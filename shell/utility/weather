@@ -1,0 +1,5 @@
+#!/bin/bash
+
+LOCATION=${1?Give location for weather report, e.g. Los_Angeles}
+
+curl -s wttr.in/"$LOCATION"?m

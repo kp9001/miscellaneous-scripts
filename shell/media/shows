@@ -1,0 +1,11 @@
+#!/bin/bash
+
+IFS=$'\n'
+
+i=$1
+
+for file in $( ls | grep \[AC\] ); do
+	((i+=1));
+	mkvextract "$file" tracks 0:video 2:audio 4:subs;
+	mkvmerge -o "SAO - S2E$i.mkv" video audio subs;
+done	

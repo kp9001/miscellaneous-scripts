@@ -1,0 +1,12 @@
+#!/bin/bash
+
+FILETYPES="arw jpg jpeg png"
+PHOTOSDIR=~/Pictures/camera
+MOUNTDIR=$( lsblk | grep "/run/media" | awk '{print $7}' )
+
+for i in $FILETYPES; do 
+  find "$MOUNTDIR" -type f -iname \*."$i" | rev | cut -d/ -f2 | uniq | rev | while read j; do
+    [[ ! -d "$PHOTOSDIR"/$(date '+%Y-%m-%d')/"$j" ]] && mkdir -p "$PHOTOSDIR"/$(date '+%Y-%m-%d')/"$j"
+    cp $( find "$MOUNTDIR" -type f -iname \*."$i" ) "$PHOTOSDIR"/$(date '+%Y-%m-%d')/"$j"
+  done
+done

@@ -1,0 +1,24 @@
+#!/bin/bash
+
+dir="${HOME}/pictures/wallpapers"
+wdir="$dir/wide"
+uwdir="$dir/ultrawide"
+
+pic=$( find "$dir" -type f -name "*.jpg" | shuf -n1 )
+wpic=$( find "$wdir" -type f -name "*.jpg" | shuf -n1 )
+uwpic=$( find "$uwdir" -type f -name "*.jpg" | shuf -n1 )
+
+
+case $1 in
+	"--w") 
+		gsettings set org.gnome.desktop.background picture-options 'scaled'
+		gsettings set org.gnome.desktop.background picture-uri "file://$wpic" 
+	;;
+	"--uw") 
+		gsettings set org.gnome.desktop.background picture-options 'centered'
+		gsettings set org.gnome.desktop.background picture-uri "file://$uwpic" 
+	;;
+	*) 
+		gsettings set org.gnome.desktop.background picture-uri "file://$pic" 
+	;;
+esac
